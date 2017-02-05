@@ -2,6 +2,10 @@
 
 Youtube mp3 downloader - server module.
 
+## Use
+
+`node insta.js` & `POST` to `localhost:3333/downloads/:v`, where v is a youtube video id.
+
 <!---
 [![Build Status](https://travis-ci.org/opensoars/ytmp3dl-server.svg)](https://travis-ci.org/opensoars/ytmp3dl-server)
 [![Coverage Status](https://coveralls.io/repos/opensoars/ytmp3dl-server/badge.svg?branch=master&service=github)](https://coveralls.io/github/opensoars/ytmp3dl-server?branch=master)
@@ -12,3 +16,4 @@ Youtube mp3 downloader - server module.
 [![devDependency Status](https://david-dm.org/opensoars/ytmp3dl-server/dev-status.svg)](https://david-dm.org/opensoars/ytmp3dl-server#info=devDependencies)
 -->
 ---
+
