@@ -2,6 +2,10 @@
 
 Youtube mp3 downloader - server module.
 
+## `ytmp3dl`
+
+This module uses the [ytmp3dl-core](https://github.com/opensoars/ytmp3dl-core) module.
+
 ## Use
 
 `node insta.js` & `POST` to `localhost:3333/downloads/:v`, where v is a youtube video id.
