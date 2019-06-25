@@ -7,7 +7,7 @@ const server = express();
 
 const ytmp3dl = require('ytmp3dl-core');
 const Download = ytmp3dl.Download;
-ytmp3dl.cleanTemp();
+//ytmp3dl.cleanTemp();
 
 const log = console.log;
 
