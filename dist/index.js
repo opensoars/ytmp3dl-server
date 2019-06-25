@@ -41,7 +41,7 @@ server.post('/downloads/:v', (req, res, next) => {
     });
   } else {
     try {
-      let dl = new Download({ v: req.params.v }).on('callMethod', method => log(`callMethod: ${ method }`)).on('stream-progress', prog => log('stream-progress', prog)).on('conversion-progress', prog => log('conversion-progress', prog)).on('error', err => log('error', err)).on('success', result => {
+      let dl = new Download({ v: req.params.v }).on('callMethod', method => log(`callMethod: ${method}`)).on('stream-progress', prog => log('stream-progress', prog)).on('conversion-progress', prog => log('conversion-progress', prog)).on('error', err => log('error', err)).on('success', result => {
         log('success', result);
 
         Download.copyAndClean({
