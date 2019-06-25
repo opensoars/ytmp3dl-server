@@ -33,7 +33,16 @@ const downloads = function (dls) {
   return dls;
 }({});
 
-server.post('/downloads/:v', (req, res, next) => {
+server.get('/download', (req, res, next) => {
+  res.json(downloads);
+});
+
+server.get('/download/:v', (req, res, next) => {
+  console.log('downloads');
+  res.json(downloads[req.params.v]);
+});
+
+server.post('/download/:v', (req, res, next) => {
   if (downloads.get(req.params.v)) {
     res.json({
       error: 'download already present',
@@ -44,12 +53,13 @@ server.post('/downloads/:v', (req, res, next) => {
       let dl = new Download({ v: req.params.v }).on('callMethod', method => log(`callMethod: ${method}`)).on('stream-progress', prog => log('stream-progress', prog)).on('conversion-progress', prog => log('conversion-progress', prog)).on('error', err => log('error', err)).on('success', result => {
         log('success', result);
 
-        Download.copyAndClean({
-          dir: __dirname + '/../done',
-          result_file_location: result.file_location,
-          file_ext: dl.file_ext,
-          file_name: result.file_name
-        });
+        /*          Download.copyAndClean({
+                    dir: __dirname + '/../done',
+                    result_file_location: result.file_location,
+                    file_ext: dl.file_ext,
+                    file_name: result.file_name + '.' + dl.file_ext
+                  });
+        */
 
         downloads.del(req.params.v);
       });
