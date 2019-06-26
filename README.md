@@ -2,8 +2,6 @@
 
 Youtube mp3 downloader - server module.
 
-## `ytmp3dl`
-
 This module uses the [ytmp3dl-core](https://github.com/opensoars/ytmp3dl-core) module.
 
 [![Build Status](https://travis-ci.org/opensoars/ytmp3dl-server.svg?branch=master)](https://travis-ci.org/opensoars/ytmp3dl-server)
