@@ -5,7 +5,7 @@ const server = express();
 
 const ytmp3dl = require('ytmp3dl-core');
 const Download = ytmp3dl.Download;
-//ytmp3dl.cleanTemp();
+ytmp3dl.cleanTemp();
 
 const log = console.log;
 
@@ -66,17 +66,14 @@ server.post('/download/:v', (req, res, next) => {
         .on('success', result => {
           log('success', result);
 
-/*          Download.copyAndClean({
+          Download.copyAndClean({
             dir: __dirname + '/../done',
             result_file_location: result.file_location,
             file_ext: dl.file_ext,
             file_name: result.file_name + '.' + dl.file_ext
           });
-*/
 
           downloads.del(req.params.v);
-
-
         });
 
         dl.callMethod('start');
