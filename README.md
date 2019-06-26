@@ -10,6 +10,13 @@ This module uses the [ytmp3dl-core](https://github.com/opensoars/ytmp3dl-core) m
 
 @TODO
 
+(FUTURE) `npm install ytmp3dl-server`
+
+# Requirements
+
+- `Node.js` (>=10.16.0) + `NPM`
+- Globally installed `ffmpeg`
+
 ## Use
 
 @TODO
@@ -18,9 +25,7 @@ This module uses the [ytmp3dl-core](https://github.com/opensoars/ytmp3dl-core) m
 
 # Develop
 
-@TODO
-
-Run `npm run gulp-babel` to compile the source code. Run `npm run gulp-watch` to run the `gulp-babel` npm command on file change. Of course `gulp babel` and `gulp watch` can be used when gulp is locally installed.
+Previously this project was developed using Babel.js, but since Node.js LTS supports all the features that we were transpiling Babel.js is no longer used. To develop I run `node insta.js`, the `insta.js` file starts a HTTP server when invoked.
 
 
 # Contributing
