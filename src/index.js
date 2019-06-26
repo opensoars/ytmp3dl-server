@@ -3,7 +3,7 @@ const is = require('is');
 const express = require('express');
 const server = express();
 
-const ytmp3dl = require('ytmp3dl-core');
+const ytmp3dl = require('./../../ytmp3dl-core/src/index.js');
 const Download = ytmp3dl.Download;
 ytmp3dl.cleanTemp();
 
@@ -41,12 +41,20 @@ const downloads = (function (dls) {
 
 
 server.get('/download', (req, res, next) => {
-  res.json(downloads);
+  const pubs = {};
+  const dls = downloads.get();
+  for (let k in dls)
+    pubs[k] = dls[k].pub.get();
+  res.json(pubs);
 })
 
 server.get('/download/:v', (req, res, next) => {
-  console.log('downloads');
-  res.json(downloads[req.params.v]);
+  if (downloads.get(req.params.v)) {
+    res.json(downloads.get(req.params.v).pub.get());
+  }
+  else {
+    res.json({ success: false, error: `No such download: ${req.params.v}` });
+  }
 });
 
 server.post('/download/:v', (req, res, next) => {
