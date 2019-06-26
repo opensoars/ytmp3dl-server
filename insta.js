@@ -1,8 +1,6 @@
-"use strict";
-
 const port = 3333;
 
-const server = require('./dist/index.js');
+const server = require('./src/index.js');
 
 server.listen(port);
 
