@@ -8,6 +8,9 @@ This module uses the [ytmp3dl-core](https://github.com/opensoars/ytmp3dl-core) m
 
 [![Build Status](https://travis-ci.org/opensoars/ytmp3dl-server.svg?branch=master)](https://travis-ci.org/opensoars/ytmp3dl-server)
 
+`ytmp3dl-server` will be developed using GraphQL.
+
+
 ## Install
 
 @TODO
