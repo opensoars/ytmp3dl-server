@@ -3,7 +3,7 @@ const is = require('is');
 const express = require('express');
 const server = express();
 
-const ytmp3dl = require('ytmp3dl-core');
+const ytmp3dl = require('./../../ytmp3dl-core/src/index.js');
 
 const Download = ytmp3dl.Download;
 ytmp3dl.cleanTemp();
