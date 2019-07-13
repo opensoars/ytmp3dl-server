@@ -77,7 +77,7 @@ vs.forEach(v => {
   const req = http.request({
     hostname: 'localhost',
     port: port,
-    path: `/download/${v}`,
+    path: `/downloads/${v}`,
     method: 'POST',
   });
   req.on('error', (e) => {

@@ -41,7 +41,11 @@ const downloads = (function (dls) {
 }({}));
 
 
-server.get('/download', (req, res, next) => {
+server.get('/ping', (req, res, next) => {
+  res.end('');
+});
+
+server.get('/downloads', (req, res, next) => {
   const pubs = {};
   const dls = downloads.get();
   for (let k in dls)
@@ -49,7 +53,7 @@ server.get('/download', (req, res, next) => {
   res.json(pubs);
 });
 
-server.get('/download/:v', (req, res, next) => {
+server.get('/downloads/:v', (req, res, next) => {
   if (downloads.get(req.params.v)) {
     res.json(downloads.get(req.params.v).pub);
   }
@@ -58,7 +62,7 @@ server.get('/download/:v', (req, res, next) => {
   }
 });
 
-server.post('/download/:v', (req, res, next) => {
+server.post('/downloads/:v', (req, res, next) => {
   if (downloads.get(req.params.v)) {
     res.json({
       error: 'download already present',
