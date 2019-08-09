@@ -8,15 +8,14 @@ server.listen(port);
 
 console.log(`server listening at port: ${port}`);
 
-
 let vs = [
-  //'NnTg4vzli5s',
+  'NnTg4vzli5s'
   //'sQVeK7Dt18U',
   //'kqq_oq6QWZI',
   //'d0TX75q6Y1M',
   //'lFMkAdg0E-Q',
   //'RaY4Rg-2sBA',
-  //'Owbd9lvNM2Q', 
+  //'Owbd9lvNM2Q',
   //'2t4ojjzJJZ4',
   //'Lk6oSIjc6hI',
   //'lTG3J_3M_NM',
@@ -30,7 +29,7 @@ let vs = [
   //'ba_5tGIRTFU',
   //'VOvEg-tWoYs',
   //'4ndJbv17IhA'
-    
+
   //'NnTg4vzli5s'
   //'RaY4Rg-2sBA'
 
@@ -70,7 +69,6 @@ let vs = [
   // 'Em1X4MUWqs4',
   // 'GF-hrZyBHwU',
   // 'yF74OxgqJd4',
-
 ];
 
 vs.forEach(v => {
@@ -78,11 +76,10 @@ vs.forEach(v => {
     hostname: 'localhost',
     port: port,
     path: `/downloads/${v}`,
-    method: 'POST',
+    method: 'POST'
   });
-  req.on('error', (e) => {
+  req.on('error', e => {
     console.error(`problem with request: ${e.message}`);
   });
   req.end();
 });
-
