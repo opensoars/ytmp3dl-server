@@ -1,6 +1,6 @@
 # ytmp3dl-server
 
-Youtube mp3 downloader - server module. This chrome extension adds a download button to YouTube.
+Youtube mp3 downloader - server module.
 
 @TODO Screenshot
 
