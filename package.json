@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "^4.13.4",
     "is": "^3.1.0",
-    "ytmp3dl-core": "^0.0.20"
+    "ytmp3dl-core": "^0.0.21"
   },
   "devDependencies": {},
   "repository": {
