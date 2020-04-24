@@ -52,7 +52,8 @@ const typeDefs = `
     video_info: Video_info
     working_url: String
     file_location: String
-    output_file: String
+    output_location: String
+    file_name: String
     streamProgress: StreamProgress
     conversionProgress: ConversionProgress
   }
@@ -155,7 +156,8 @@ async function startDownload({ req, res, v }) {
           output
         });
 
-        dl.pub.set('output_file', output);
+        dl.pub.set('output_location', output);
+        dl.pub.set('file_name', fileName);
         //downloads.del(v);
       });
 
@@ -180,6 +182,8 @@ async function startDownload({ req, res, v }) {
 }
 
 app.use(cors());
+
+app.use(express.static(__dirname + '/../done'));
 
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
