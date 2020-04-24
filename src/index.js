@@ -5,6 +5,10 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const cors = require('cors');
 
+const fs = require('fs');
+const util = require('util');
+const writeFile = util.promisify(fs.writeFile);
+
 //const ytmp3dl = require('./../../ytmp3dl-core/src/index.js');
 const ytmp3dl = require('ytmp3dl-core');
 
@@ -13,10 +17,7 @@ ytmp3dl.cleanTemp();
 
 const log = console.log;
 
-const downloads = (function (dls) {
-  dls = {
-    d: {}
-  };
+const downloads = (function (dls = { d: {} }) {
   dls.get = function (key) {
     if (!key) return dls.d;
     return dls.d[key];
@@ -37,8 +38,29 @@ const downloads = (function (dls) {
 
     return dls;
   };
+
+  dls.writeToFile = function () {
+    const d = dls.get();
+    console.log('writeToFile', dls.get());
+  };
+
   return dls;
-})({});
+})();
+// ({
+//   d: {
+//     '123': {
+//       pub: {
+//         start: '456',
+//         errs: [],
+//         methodsCalled: []
+//       }
+//     }
+//   }
+// });
+
+setInterval(() => {
+  downloads.writeToFile();
+}, 2500);
 
 const typeDefs = `
   type Query { downloads: [Download] }
