@@ -41,8 +41,8 @@ const downloads = (function (dls) {
 })({});
 
 const typeDefs = `
-  type Query { downloads: [Downloads] }
-  type Downloads {
+  type Query { downloads: [Download] }
+  type Download {
     start: String
     v: String
     completed: Boolean
@@ -70,6 +70,10 @@ const typeDefs = `
     total: Float
     percentage: Float
   }
+
+  type Mutation {
+    retryDownload(v: String!): Download
+  }
 `;
 
 const resolvers = {
@@ -86,8 +90,25 @@ const resolvers = {
       }
       return dlsArr;
     }
+  },
+  Mutation: {
+    retryDownload: (parent, { v }) => {
+      if (downloads.get(v)) {
+        // downloads.del(v);
+        startDownload({
+          res: {
+            json: () => {
+              // console.log('ACTUALLY WORKING....');
+            }
+          },
+          v
+        });
+      } else {
+        return;
+        // res.json({ success: false, error: `No such download: ${v}` });
+      }
+    }
   }
-  // Mutation: {}
 };
 
 const schema = makeExecutableSchema({
@@ -97,9 +118,10 @@ const schema = makeExecutableSchema({
 
 const app = express();
 
-async function startDownload({ req, res, next, v }) {
+async function startDownload({ req, res, v }) {
+  v = v || req.params.v;
   try {
-    let dl = new Download({ v: req.params.v })
+    let dl = new Download({ v: v })
       .on('callMethod', method => log(`callMethod: ${method}`))
       .on('stream-progress', prog => log('stream-progress', prog.percentage))
       .on('conversion-progress', prog => log('conversion-progress', prog))
@@ -117,7 +139,7 @@ async function startDownload({ req, res, next, v }) {
         });
 
         dl.pub.set('output_file', output);
-        //downloads.del(req.params.v);
+        //downloads.del(v);
       });
 
     for (let k in dl._events)
@@ -126,16 +148,16 @@ async function startDownload({ req, res, next, v }) {
       });
 
     dl.callMethod('start');
-    downloads.set(req.params.v, dl);
+    downloads.set(v, dl);
 
     res.json({
       succes: 'download started',
-      v: req.params.v
+      v: v
     });
   } catch (err) {
     res.json({
       error: 'could not start download (try/catch)',
-      v: req.params.v
+      v: v
     });
   }
 }
@@ -168,7 +190,7 @@ app.put('/downloads/:v', (req, res, next) => {
   const v = req.params.v;
   if (downloads.get(v)) {
     downloads.del(v);
-    startDownload({ req, res, next, v });
+    startDownload({ req, res, v });
   } else {
     res.json({ success: false, error: `No such download: ${v}` });
   }
@@ -182,7 +204,7 @@ app.post('/downloads/:v', (req, res, next) => {
       v: v
     });
   } else {
-    startDownload({ req, res, next, v });
+    startDownload({ req, res, v });
   }
 });
 
