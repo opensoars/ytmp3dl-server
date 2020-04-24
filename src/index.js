@@ -17,6 +17,10 @@ ytmp3dl.cleanTemp();
 
 const log = console.log;
 
+const diskDownloads = JSON.parse(
+  fs.readFileSync(__dirname + '/../db.json') || '{}'
+);
+
 const downloads = (function (dls = { d: {} }) {
   dls.get = function (key) {
     if (!key) return dls.d;
@@ -39,13 +43,19 @@ const downloads = (function (dls = { d: {} }) {
     return dls;
   };
 
+  let lastWrite;
   dls.writeToFile = function () {
-    const d = dls.get();
-    console.log('writeToFile', dls.get());
+    const data = JSON.stringify(dls.get());
+    if (data !== lastWrite) {
+      fs.writeFile(__dirname + '/../db.json', data, 'utf8', err => {
+        if (err) console.log(err);
+      });
+    }
+    lastWrite = data;
   };
 
   return dls;
-})();
+})({ d: diskDownloads });
 // ({
 //   d: {
 //     '123': {
@@ -187,10 +197,10 @@ async function startDownload({ req, res, v }) {
         //downloads.del(v);
       });
 
-    for (let k in dl._events)
-      dl.on(k, (...args) => {
-        console.log('event', k, args);
-      });
+    // for (let k in dl._events)
+    //   dl.on(k, (...args) => {
+    //     console.log('event', k, args);
+    //   });
 
     dl.callMethod('start');
     downloads.set(v, dl);
