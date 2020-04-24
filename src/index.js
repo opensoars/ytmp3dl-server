@@ -1,7 +1,9 @@
 const is = require('is');
-
 const express = require('express');
-const server = express();
+const bodyParser = require('body-parser');
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+const { makeExecutableSchema } = require('graphql-tools');
+const cors = require('cors');
 
 //const ytmp3dl = require('./../../ytmp3dl-core/src/index.js');
 const ytmp3dl = require('ytmp3dl-core');
@@ -38,6 +40,63 @@ const downloads = (function (dls) {
   return dls;
 })({});
 
+const typeDefs = `
+  type Query { downloads: [Downloads] }
+  type Downloads {
+    start: String
+    v: String
+    completed: Boolean
+    error: Boolean
+    methodsCalled: [String]
+    errs: [String]
+    video_info: Video_info
+    working_url: String
+    file_location: String
+    output_file: String
+    streamProgress: StreamProgress
+    conversionProgress: ConversionProgress
+  }
+  type Video_info {
+    title: String
+    length_seconds: Int
+  }
+  type StreamProgress {
+    bytesWritten: Float
+    bytesTotal: Float
+    percentage: Float
+  }
+  type ConversionProgress {
+    current: Float
+    total: Float
+    percentage: Float
+  }
+`;
+
+const resolvers = {
+  Query: {
+    downloads: () => {
+      const dls = downloads.get();
+      const dlsArr = [];
+      for (let v in dls) {
+        dlsArr.push({
+          v,
+          ...dls[v].pub,
+          errs: dls[v].pub.errs.map(err => err.stack)
+        });
+      }
+      return dlsArr;
+    }
+  }
+  // Mutation: {}
+};
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+});
+
+const app = express();
+
 async function startDownload({ req, res, next, v }) {
   try {
     let dl = new Download({ v: req.params.v })
@@ -45,17 +104,19 @@ async function startDownload({ req, res, next, v }) {
       .on('stream-progress', prog => log('stream-progress', prog.percentage))
       .on('conversion-progress', prog => log('conversion-progress', prog))
       .on('error', err => log('error', err))
-      .on('success', result => {
+      .on('success', async result => {
         log('success', result);
         const dir = __dirname + '/../done';
         const fileName = result.file_name + '.' + result.file_ext;
         const output = dir + '/' + fileName;
 
-        Download.copyAndClean({
+        await Download.copyAndClean({
           result_file_location: result.file_location,
           file_ext: result.file_ext,
           output
         });
+
+        dl.pub.set('output_file', output);
         //downloads.del(req.params.v);
       });
 
@@ -79,18 +140,23 @@ async function startDownload({ req, res, next, v }) {
   }
 }
 
-server.get('/ping', (req, res, next) => {
+app.use(cors());
+
+app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+
+app.get('/ping', (req, res, next) => {
   res.end('');
 });
 
-server.get('/downloads', (req, res, next) => {
+app.get('/downloads', (req, res, next) => {
   const pubs = {};
   const dls = downloads.get();
   for (let k in dls) pubs[k] = dls[k].pub;
   res.json(pubs);
 });
 
-server.get('/downloads/:v', (req, res, next) => {
+app.get('/downloads/:v', (req, res, next) => {
   if (downloads.get(req.params.v)) {
     res.json(downloads.get(req.params.v).pub);
   } else {
@@ -98,7 +164,7 @@ server.get('/downloads/:v', (req, res, next) => {
   }
 });
 
-server.put('/downloads/:v', (req, res, next) => {
+app.put('/downloads/:v', (req, res, next) => {
   const v = req.params.v;
   if (downloads.get(v)) {
     downloads.del(v);
@@ -108,7 +174,7 @@ server.put('/downloads/:v', (req, res, next) => {
   }
 });
 
-server.post('/downloads/:v', (req, res, next) => {
+app.post('/downloads/:v', (req, res, next) => {
   const v = req.params.v;
   if (downloads.get(v)) {
     res.json({
@@ -120,8 +186,8 @@ server.post('/downloads/:v', (req, res, next) => {
   }
 });
 
-server.delete('/downloads/:v', (req, res, next) => {
+app.delete('/downloads/:v', (req, res, next) => {
   res.end('delete: ' + req.params.v);
 });
 
-module.exports = server;
+module.exports = app;

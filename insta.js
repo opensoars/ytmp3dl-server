@@ -1,12 +1,12 @@
 const http = require('http');
 
+const app = require('./src/index.js');
+
 const port = 3333;
 
-const server = require('./src/index.js');
+app.listen(port);
 
-server.listen(port);
-
-console.log(`server listening at port: ${port}`);
+console.log(`app listening at port: ${port}`);
 
 let vs = [
   // 'NnTg4vzli5s'
