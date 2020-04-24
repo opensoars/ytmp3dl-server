@@ -183,8 +183,11 @@ async function startDownload({ req, res, v }) {
       .on('success', async result => {
         log('success', result);
         const dir = __dirname + '/../done';
-        const fileName = result.file_name + '.' + result.file_ext;
-        const output = dir + '/' + fileName;
+        let fileName = result.file_name + '.' + result.file_ext;
+        let output = dir + '/' + fileName;
+
+        fileName = fileName.replace(/\.\.mp3$/, '.mp3');
+        output = output.replace(/\.\.mp3$/, '.mp3');
 
         await Download.copyAndClean({
           result_file_location: result.file_location,
