@@ -75,6 +75,7 @@ const typeDefs = `
   type Mutation {
     retryDownload(v: String!): Download
     startDownload(v: String!): Download
+    deleteDownload(v: String!): Download
   }
 `;
 
@@ -125,6 +126,9 @@ const resolvers = {
         return;
         // res.json({ success: false, error: `No such download: ${v}` });
       }
+    },
+    deleteDownload: (parent, { v }) => {
+      downloads.del(v);
     }
   }
 };
