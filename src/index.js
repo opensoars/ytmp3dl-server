@@ -73,6 +73,7 @@ const typeDefs = `
 
   type Mutation {
     retryDownload(v: String!): Download
+    startDownload(v: String!): Download
   }
 `;
 
@@ -85,7 +86,7 @@ const resolvers = {
         dlsArr.push({
           v,
           ...dls[v].pub,
-          errs: dls[v].pub.errs.map(err => err.stack)
+          errs: dls[v].pub.errs.map(err => (err.stack ? err.stack : err))
         });
       }
       return dlsArr;
@@ -94,6 +95,22 @@ const resolvers = {
   Mutation: {
     retryDownload: (parent, { v }) => {
       if (downloads.get(v)) {
+        // downloads.del(v);
+        startDownload({
+          res: {
+            json: () => {
+              // console.log('ACTUALLY WORKING....');
+            }
+          },
+          v
+        });
+      } else {
+        return;
+        // res.json({ success: false, error: `No such download: ${v}` });
+      }
+    },
+    startDownload: (parent, { v }) => {
+      if (!downloads.get(v)) {
         // downloads.del(v);
         startDownload({
           res: {
