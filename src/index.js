@@ -17,11 +17,11 @@ ytmp3dl.cleanTemp();
 
 const log = console.log;
 
-try {
-  fs.readFileSync(__dirname + '/../db.json');
-} catch (err) {
-  fs.writeFileSync(__dirname + '/../db.json', '{}');
-}
+// try {
+//   fs.readFileSync(__dirname + '/../db.json');
+// } catch (err) {
+//   fs.writeFileSync(__dirname + '/../db.json', '{}');
+// }
 
 const diskDownloads = JSON.parse(
   fs.readFileSync(__dirname + '/../db.json') || '{}'
@@ -73,10 +73,6 @@ const downloads = (function (dls = { d: {} }) {
 //     }
 //   }
 // });
-
-setInterval(() => {
-  downloads.writeToFile();
-}, 2500);
 
 const typeDefs = `
   type Query { downloads: [Download] }
@@ -235,6 +231,20 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 app.get('/ping', (req, res, next) => {
   res.end('');
+});
+
+let writeInterval;
+
+app.get('/writeFiles/:interval', (req, res, next) => {
+  writeInterval = setInterval(() => {
+    downloads.writeToFile();
+  }, req.params.interval || 2500);
+  res.json({ success: true });
+});
+
+app.get('/stopWriteFiles', (req, res, next) => {
+  clearInterval(writeInterval);
+  res.json({ success: true });
 });
 
 app.get('/downloads', (req, res, next) => {
