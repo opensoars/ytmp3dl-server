@@ -17,6 +17,12 @@ ytmp3dl.cleanTemp();
 
 const log = console.log;
 
+try {
+  fs.readFileSync(__dirname + '/../db.json');
+} catch (err) {
+  fs.writeFileSync(__dirname + '/../db.json', '{}');
+}
+
 const diskDownloads = JSON.parse(
   fs.readFileSync(__dirname + '/../db.json') || '{}'
 );
