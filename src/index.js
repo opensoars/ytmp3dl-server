@@ -233,7 +233,9 @@ app.get('/ping', (req, res, next) => {
   res.end('');
 });
 
-let writeInterval;
+let writeInterval = setInterval(() => {
+  downloads.writeToFile();
+}, 2500);
 
 app.get('/writeFiles/:interval', (req, res, next) => {
   writeInterval = setInterval(() => {
