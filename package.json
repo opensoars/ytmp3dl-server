@@ -18,7 +18,7 @@
     "graphql": "^15.0.0",
     "graphql-tools": "^5.0.0",
     "is": "^3.1.0",
-    "ytmp3dl-core": "^0.0.38"
+    "ytmp3dl-core": "^0.0.39"
   },
   "devDependencies": {},
   "repository": {
