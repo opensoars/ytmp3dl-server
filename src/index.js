@@ -178,12 +178,16 @@ async function startDownload({ req, res, v }) {
   v = v || req.params.v;
   try {
     let dl = new Download({ v: v })
-      .on('callMethod', method => log(`callMethod: ${method}`))
-      .on('stream-progress', prog => log('stream-progress', prog.percentage))
-      .on('conversion-progress', prog => log('conversion-progress', prog))
-      .on('error', err => log('error', err))
+      .on('callMethod', method => log(`callMethod (${v}): ${method}`))
+      .on('stream-progress', prog =>
+        log(`stream-progress (${v}):`, prog.percentage)
+      )
+      .on('conversion-progress', prog =>
+        log(`conversion-progress (${v}):`, prog)
+      )
+      .on('error', err => log(`error (${v}):`, err))
       .on('success', async result => {
-        log('success', result);
+        log(`success (${v})`, result);
         const dir = __dirname + '/../done';
         let fileName = result.file_name + '.' + result.file_ext;
         let output = dir + '/' + fileName;
